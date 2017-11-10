@@ -5,6 +5,7 @@ from actor import Actor, GENDERS, ALIGNMENTS
 class World:
     def __init__(self, database):
         self.database = database
+        self._player_actor_id = None
 
     def sql_query(self, query_string, parameters=()):
         with sql.connect(self.database) as conn:
@@ -14,10 +15,16 @@ class World:
 
     def query_to_actor(self, query, parameters):
         query_result = self.sql_query(query, parameters)
-        actor_id, name, image, gender, alignment, location = query_result[0]
+        (actor_id, name, image, gender, alignment, location, health_per, energy_per,
+         strength_tier, strength_rank, power_tier, power_rank, speed_tier, speed_rank,
+         brawl_tier, brawl_rank, accuracy_tier, accuracy_rank, toughness_tier,
+         toughness_rank) = query_result[0]
         gender = GENDERS[gender]
         alignment = ALIGNMENTS[alignment]
-        return Actor(actor_id, name, image, gender, alignment, location)
+        return Actor(actor_id, name, image, gender, alignment, location, health_per, energy_per,
+                     strength_tier, strength_rank, power_tier, power_rank, speed_tier, speed_rank,
+                     brawl_tier, brawl_rank, accuracy_tier, accuracy_rank, toughness_tier,
+                     toughness_rank)
 
     def get_actor_by_id(self, actor_id):
         query = 'SELECT * FROM actors WHERE id=?'
@@ -41,5 +48,18 @@ class World:
         gender = GENDERS.index(actor.gender)
         parameters = actor.name, actor.image, gender, alignment, actor.location, actor.actor_id
         return self.sql_query(query, parameters)
+
+    @property
+    def player_actor(self):
+        return self.get_actor_by_id(self._player_actor_id)
+
+    @player_actor.setter
+    def player_actor(self, value):
+        self._player_actor_id = value.actor_id
+
+
+def set_world(w):
+    world.database = w
+
 
 world = World('database.db')

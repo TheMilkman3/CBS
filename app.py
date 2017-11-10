@@ -2,7 +2,11 @@ import tkinter
 import tkinter.ttk as ttk
 import editor
 from util_frames import NewGameFrame
-
+from cbs_window import *
+from world import world, set_world
+from main_frames import PlayerActorFrame
+import os
+import shutil
 
 
 class Application(ttk.Frame):
@@ -28,27 +32,20 @@ class Application(ttk.Frame):
         self.file_menu.add_command(label='Load')
 
     def _b_new_game(self):
-        w = tkinter.Toplevel()
-        self.new_game_frame = NewGameFrame(w)
+        w = CBSWindow(self, 'New', 10, 10)
+        self.new_game_frame = NewGameFrame(w, self)
         self.new_game_frame.grid()
-        self.lock()
+        self.new_game_frame.grab_set()
 
-    def lock(self, cur=None):
-        if cur is None:
-            cur = self
-        for child in cur.winfo_children():
-            try:
-                child.config(state='disabled')
-            except tkinter.TclError:
-                pass
-            self.lock(child)
+    def start_new(self, name, player_actor):
+        new_dir = 'saves\\' + name
+        os.makedirs(new_dir)
+        new_db = new_dir + '\\database.db'
+        shutil.copyfile('database.db', new_db)
+        set_world(new_db)
+        world.player_actor = player_actor
+        self.main_notebook.add(PlayerActorFrame(self), text='Character')
 
-    def unlock(self, cur=None):
-        if cur is None:
-            cur = self
-        for child in cur.children:
-            child.config(state='enabled')
-            self.unlock(child)
 
 
 app = Application()
