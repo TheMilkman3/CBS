@@ -57,6 +57,9 @@ class World:
     def player_actor(self, value):
         self._player_actor_id = value.actor_id
 
+    def set_player_actor_id(self, value):
+        self._player_actor_id = value
+
 
 def set_world(w):
     world.database = w

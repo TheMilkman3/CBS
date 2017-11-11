@@ -1,5 +1,6 @@
 import tkinter
 import tkinter.ttk as ttk
+import os
 from world import world
 
 
@@ -27,5 +28,26 @@ class NewGameFrame(ttk.Frame):
 
     def _b_confirm(self):
         player = world.get_actor_by_id(self.actor_id_list[self.actor_listbox.curselection()[0]])
-        self.app.start_new(self.name_entry.get(), player)
+        self.app.create_new_save(self.name_entry.get(), player)
+        self.master.cancel()
+
+
+class LoadGameFrame(ttk.Frame):
+    def __init__(self, master=None, app=None):
+        ttk.Frame.__init__(self, master)
+        self.app = app
+        # create widgets
+        self.save_listbox = tkinter.Listbox(self)
+        for d in os.scandir('saves\\'):
+            if d.is_dir():
+                self.save_listbox.insert(tkinter.END, d.name)
+        self.confirm_button = ttk.Button(self, text='Confirm', command=self._b_confirm)
+
+        # grid widgets
+        self.save_listbox.grid(rowspan=3)
+        self.confirm_button.grid(column=1)
+
+    def _b_confirm(self):
+        index = self.save_listbox.curselection()[0]
+        self.app.load_save(self.save_listbox.get(index))
         self.master.cancel()
