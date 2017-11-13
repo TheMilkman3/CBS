@@ -24,7 +24,7 @@ class Actor:
         self.gender = gender
         self.alignment = alignment
         self.location = location
-        self.health_pe = health_per
+        self.health_per = health_per
         self.energy_per = energy_per
         self.strength_tier = strength_tier
         self.strength_rank = strength_rank
@@ -95,3 +95,15 @@ class Actor:
 
     def toughness_value(self):
         return self._calc_attribute_value(self.toughness_tier, self.toughness_rank)
+
+    def health_total(self):
+        return self.toughness_value()
+
+    def health_current(self):
+        return self.hp_total() * self.health_per
+
+    def energy_total(self):
+        return (self.power_value() + self.toughness_value())/2
+
+    def energy_current(self):
+        return self.energy_total() * self.energy_per
