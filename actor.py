@@ -100,7 +100,7 @@ class Actor:
         return self.toughness_value()
 
     def health_current(self):
-        return self.hp_total() * self.health_per
+        return self.health_total() * self.health_per
 
     def energy_total(self):
         return (self.power_value() + self.toughness_value())/2

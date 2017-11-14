@@ -4,7 +4,7 @@ import editor
 from util_frames import NewGameFrame, LoadGameFrame
 from cbs_window import *
 from world import world, set_world
-from main_frames import PlayerActorFrame
+from main_frames import PlayerActorFrame, CurrentLocationFrame
 import os
 import shutil
 
@@ -46,7 +46,9 @@ class Application(ttk.Frame):
     def start_new(self, new_db):
         set_world(new_db)
         player_actor_frame = PlayerActorFrame(self)
+        current_location_frame = CurrentLocationFrame(self)
         self.main_notebook.add(player_actor_frame, text='Character')
+        self.main_notebook.add(current_location_frame, text='Location')
         self.main_notebook.hide(self.editor_frame)
         self.main_notebook.bind('<<NotebookTabChanged>>', player_actor_frame.refresh)
 
@@ -66,6 +68,7 @@ class Application(ttk.Frame):
         world.set_player_actor_id(actor_id)
         new_db = 'saves\\' + name + '\\database.db'
         self.start_new(new_db)
+
 
 app = Application()
 app.master.title("CBS")

@@ -1,5 +1,6 @@
 import sqlite3 as sql
 from actor import Actor, GENDERS, ALIGNMENTS
+from location import Location
 
 
 class World:
@@ -35,6 +36,11 @@ class World:
         query = 'SELECT id, name FROM actors ORDER BY name DESC'
         return self.sql_query(query)
 
+    def get_actor_list_from_loc(self, location_id):
+        query = 'SELECT id, name FROM actors WHERE id=? ORDER BY name DESC'
+        parameters = (location_id,)
+        return self.sql_query(query, parameters)
+
     def add_actor(self, actor):
         query = 'INSERT INTO actors (name, image, gender, alignment, location) VALUES (?, ?, ?, ?, ?)'
         alignment = ALIGNMENTS.index(actor.alignment)
@@ -48,6 +54,19 @@ class World:
         gender = GENDERS.index(actor.gender)
         parameters = actor.name, actor.image, gender, alignment, actor.location, actor.actor_id
         return self.sql_query(query, parameters)
+
+    def query_to_location(self, query, parameters):
+        query_result = self.sql_query(query, parameters)
+        (location_id, name, area, dimension, timeframe) = query_result[0]
+        return Location(location_id, name, area, dimension, timeframe)
+
+    def get_location_by_id(self, location_id):
+        query = 'SELECT * FROM locations WHERE id=?'
+        parameters = (location_id,)
+        return self.query_to_location(query, parameters)
+
+    def get_current_location(self):
+        return self.get_location_by_id(self.player_actor.location)
 
     @property
     def player_actor(self):
