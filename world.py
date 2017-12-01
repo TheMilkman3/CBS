@@ -33,11 +33,11 @@ class World:
         return self.query_to_actor(query, parameters)
 
     def get_actor_list(self):
-        query = 'SELECT id, name FROM actors ORDER BY name DESC'
+        query = 'SELECT id, name FROM actors ORDER BY name ASC'
         return self.sql_query(query)
 
     def get_actor_list_from_loc(self, location_id):
-        query = 'SELECT id, name FROM actors WHERE location=? ORDER BY name DESC'
+        query = 'SELECT id, name FROM actors WHERE location=? ORDER BY name ASC'
         parameters = (location_id,)
         return self.sql_query(query, parameters)
 

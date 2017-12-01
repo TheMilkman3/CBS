@@ -2,6 +2,7 @@ import tkinter
 import tkinter.ttk as ttk
 import os
 from world import world
+from PIL import Image, ImageTk
 
 
 class NewGameFrame(ttk.Frame):
@@ -10,7 +11,8 @@ class NewGameFrame(ttk.Frame):
         self.app = app
         # create widgets
         self.actor_list_label = ttk.Label(self, text='Select Character')
-        self.actor_listbox = tkinter.Listbox(self)
+        self.actor_listbox = tkinter.Listbox(self, activestyle='none')
+        self.actor_listbox.bind('<<ListboxSelect>>', self._on_select)
         self.actor_id_list = []
         for actor_id, name in world.get_actor_list():
             self.actor_listbox.insert(tkinter.END, name)
@@ -18,6 +20,7 @@ class NewGameFrame(ttk.Frame):
         self.confirm_button = ttk.Button(self, text='Confirm', command=self._b_confirm)
         self.name_entry = ttk.Entry(self)
         self.name_entry_label = ttk.Label(self, text='File Name')
+        self.actor_thumbnail = ActorThumbnail(self, self.actor_id_list[0])
 
         # grid widgets
         self.actor_listbox.grid(column=0, row=1, rowspan=3)
@@ -25,6 +28,10 @@ class NewGameFrame(ttk.Frame):
         self.confirm_button.grid(column=1, row=2)
         self.name_entry_label.grid(column=1, row=0)
         self.name_entry.grid(column=1, row=1)
+        self.actor_thumbnail.grid(column=1, row=3)
+
+    def _on_select(self, _):
+        self.actor_thumbnail.actor_id = self.actor_id_list[self.actor_listbox.curselection()[0]]
 
     def _b_confirm(self):
         player = world.get_actor_by_id(self.actor_id_list[self.actor_listbox.curselection()[0]])
@@ -89,3 +96,41 @@ class ActorStatsFrame(ttk.Frame):
                 func = self.actor.__getattribute__(stat + '_display_str')
                 label.config(text=func())
                 self.frames[stat].config(borderwidth=1, relief='groove')
+
+
+class ActorThumbnail(ttk.Frame):
+    def __init__(self, master, actor_id):
+        ttk.Frame.__init__(self, master)
+        self._actor_id = actor_id
+        self.actor_image = None
+        self.columnconfigure(0, minsize=150)
+        self.rowconfigure(0, minsize=150)
+
+        # create widgets
+        self.image_label = ttk.Label(self)
+
+        # grid widgets
+        self.image_label.grid(column=0, row=0)
+
+        self.refresh()
+
+    def _button(self):
+        pass
+
+    @property
+    def actor_id(self):
+        return self._actor_id
+
+    @actor_id.setter
+    def actor_id(self, value):
+        self._actor_id = value
+        self.refresh()
+
+    def refresh(self):
+        actor = world.get_actor_by_id(self.actor_id)
+        if actor is not None:
+            image = Image.open('images\\Mini\\' + actor.image)
+            image = image.resize((150, 150), Image.ANTIALIAS)
+            tkimage = ImageTk.PhotoImage(image)
+            self.actor_image = tkimage
+            self.image_label.config(image=tkimage)

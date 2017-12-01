@@ -39,7 +39,7 @@ class PlayerActorFrame(ttk.Frame):
         self.alignment_label.config(text=player_actor.alignment)
         self.gender_label.config(text=player_actor.gender)
         if player_actor.image != '' and player_actor.image is not None:
-            image = Image.open('images\\' + player_actor.image)
+            image = Image.open('images\\Full\\' + player_actor.image)
             image = image.resize((200, 300), Image.ANTIALIAS)
             tkimage = ImageTk.PhotoImage(image)
             self.actor_image = tkimage
@@ -55,7 +55,7 @@ class CurrentLocationFrame(ttk.Frame):
         # create widgets
         self.name_label = ttk.Label(self, font=fonts.DETAIL_NAME_FONT)
         self.actor_listbox_label_frame = ttk.LabelFrame(self, text='Characters at Location')
-        self.actor_listbox = tkinter.Listbox(self.actor_listbox_label_frame)
+        self.actor_listbox = tkinter.Listbox(self.actor_listbox_label_frame, activestyle='none')
         self.actor_listbox.config(exportselection='False')
         self.actor_id_listbox = []
         self.area_label_frame = ttk.LabelFrame(self, text='Area')
