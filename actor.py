@@ -4,6 +4,9 @@ from tkinter import StringVar
 ALIGNMENTS = ('Hero', 'Anti-Hero', 'Villain', 'Civilian', 'Wild Card')
 # gender constants
 GENDERS = ('Male', 'Female', 'Other', 'N/A')
+# tier constants
+TIERS = ('Pathetic', 'Weak', 'Average', 'Superior', 'Peak', 'Inhuman', 'Super', 'Legendary', 'Godlike',
+         'Cosmic')
 
 
 class Actor:
@@ -78,23 +81,45 @@ class Actor:
     def _calc_attribute_value(tier, rank):
         return 10**(tier-1) * rank
 
+    @staticmethod
+    def _attribute_display_string(attribute, tier, rank):
+        return '{tier} {attribute} [{rank}]'.format(tier=TIERS[tier-1], attribute=attribute, rank=rank)
+
     def strength_value(self):
         return self._calc_attribute_value(self.strength_tier, self.strength_rank)
+
+    def strength_display_str(self):
+        return self._attribute_display_string('Strength', self.strength_tier, self.strength_rank)
 
     def power_value(self):
         return self._calc_attribute_value(self.power_tier, self.power_rank)
 
+    def power_display_str(self):
+        return self._attribute_display_string('Power', self.power_tier, self.power_rank)
+
     def speed_value(self):
         return self._calc_attribute_value(self.speed_tier, self.speed_rank)
+
+    def speed_display_str(self):
+        return self._attribute_display_string('Speed', self.speed_tier, self.speed_rank)
 
     def brawl_value(self):
         return self._calc_attribute_value(self.brawl_tier, self.brawl_rank)
 
+    def brawl_display_str(self):
+        return self._attribute_display_string('Brawl', self.brawl_tier, self.brawl_rank)
+
     def accuracy_value(self):
         return self._calc_attribute_value(self.accuracy_tier, self.accuracy_rank)
 
+    def accuracy_display_str(self):
+        return self._attribute_display_string('Accuracy', self.accuracy_tier, self.accuracy_rank)
+
     def toughness_value(self):
         return self._calc_attribute_value(self.toughness_tier, self.toughness_rank)
+
+    def toughness_display_str(self):
+        return self._attribute_display_string('Toughness', self.toughness_tier, self.toughness_rank)
 
     def health_total(self):
         return self.toughness_value()

@@ -35,7 +35,7 @@ class EditorResourceSelectFrame(EditorBaseFrame):
                                         command=lambda:
                                         self.master.switch_active_frame(EditorListFrame(self.master, mode='actors')))
 
-        self.actors_button.grid()
+        #self.actors_button.grid()
 
 
 class EditorListFrame(EditorBaseFrame):

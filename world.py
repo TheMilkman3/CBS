@@ -16,10 +16,10 @@ class World:
 
     def query_to_actor(self, query, parameters):
         query_result = self.sql_query(query, parameters)
-        (actor_id, name, image, gender, alignment, location, health_per, energy_per,
+        (actor_id, name, image, gender, alignment, location,
          strength_tier, strength_rank, power_tier, power_rank, speed_tier, speed_rank,
          brawl_tier, brawl_rank, accuracy_tier, accuracy_rank, toughness_tier,
-         toughness_rank) = query_result[0]
+         toughness_rank, health_per, energy_per) = query_result[0]
         gender = GENDERS[gender]
         alignment = ALIGNMENTS[alignment]
         return Actor(actor_id, name, image, gender, alignment, location, health_per, energy_per,
@@ -37,7 +37,7 @@ class World:
         return self.sql_query(query)
 
     def get_actor_list_from_loc(self, location_id):
-        query = 'SELECT id, name FROM actors WHERE id=? ORDER BY name DESC'
+        query = 'SELECT id, name FROM actors WHERE location=? ORDER BY name DESC'
         parameters = (location_id,)
         return self.sql_query(query, parameters)
 

@@ -45,9 +45,47 @@ class LoadGameFrame(ttk.Frame):
 
         # grid widgets
         self.save_listbox.grid(rowspan=3)
-        self.confirm_button.grid(column=1)
+        self.confirm_button.grid(column=1, row=0)
 
     def _b_confirm(self):
         index = self.save_listbox.curselection()[0]
         self.app.load_save(self.save_listbox.get(index))
         self.master.cancel()
+
+
+class ActorStatsFrame(ttk.Frame):
+    def __init__(self, master=None, actor=None):
+        ttk.Frame.__init__(self, master)
+        self.actor = actor
+
+        # create widgets
+        self.frames = {'strength': ttk.Frame(self), 'power': ttk.Frame(self), 'speed': ttk.Frame(self),
+                       'brawl': ttk.Frame(self), 'accuracy': ttk.Frame(self), 'toughness': ttk.Frame(self)}
+        self.strength_label = ttk.Label(self.frames['strength'])
+        self.power_label = ttk.Label(self.frames['power'])
+        self.speed_label = ttk.Label(self.frames['speed'])
+        self.brawl_label = ttk.Label(self.frames['brawl'])
+        self.accuracy_label = ttk.Label(self.frames['accuracy'])
+        self.toughness_label = ttk.Label(self.frames['toughness'])
+
+        # grid widgets
+        self.frames['strength'].grid(row=0, columnspan=2, sticky=tkinter.W)
+        self.frames['power'].grid(row=1, columnspan=2, sticky=tkinter.W)
+        self.frames['speed'].grid(row=2, columnspan=2, sticky=tkinter.W)
+        self.frames['brawl'].grid(row=3, columnspan=2, sticky=tkinter.W)
+        self.frames['accuracy'].grid(row=4, columnspan=2, sticky=tkinter.W)
+        self.frames['toughness'].grid(row=5, columnspan=2, sticky=tkinter.W)
+        self.strength_label.grid(sticky=tkinter.W)
+        self.power_label.grid(sticky=tkinter.W)
+        self.speed_label.grid(sticky=tkinter.W)
+        self.brawl_label.grid(sticky=tkinter.W)
+        self.accuracy_label.grid(sticky=tkinter.W)
+        self.toughness_label.grid(sticky=tkinter.W)
+
+    def refresh(self, _=None):
+        if self.actor is not None:
+            for stat in self.frames:
+                label = self.__getattribute__(stat + '_label')
+                func = self.actor.__getattribute__(stat + '_display_str')
+                label.config(text=func())
+                self.frames[stat].config(borderwidth=1, relief='groove')
